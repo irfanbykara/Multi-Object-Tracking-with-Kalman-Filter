@@ -17,6 +17,7 @@ class Tracks(object):
 		self.skipped_frames = 0
 
 	def predict(self,detection):
+
 		self.prediction = np.array(self.KF.predict()).reshape(1,2)
 		self.KF.correct(np.matrix(detection).reshape(2,1))
 
