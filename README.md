@@ -1,6 +1,6 @@
 # Object Tracker with Kalman Filter Using Yolov8 As Detector
 
-*This project implements kalman filter tracking on detected objects using Yolov8. This repo is explicitly created to do such tasks using roboflow object detection models. Currently only available for single object tracking. This demo is implemented using soccer-ball detection model from roboflow.
+*This project implements kalman filter tracking on detected objects using Yolov8. This repo is explicitly created to do such tasks using roboflow object detection models. Currently only available for single object tracking. This demo is implemented using soccer-ball detection model from roboflow.*
 
 ## To run
 
