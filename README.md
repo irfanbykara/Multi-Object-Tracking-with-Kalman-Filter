@@ -1,14 +1,24 @@
-# Multi Object Tracking with Kalman-Filter
+# Object Tracker with Kalman Filter Using Yolov8 As Detector
 
-This project demonstrates Multi Object Tracking with Kalman-Filter when we already have detections. In this particular project I already had detections (got detections from image processing which is not mentioned here). Multi Object tracking is done using Kalman Filter where we estimate the next position of a particular object using the detection in the previous frame. Once we have the prediction of the object in the next frame we associate this estimate with the actual detection and now using hungarian algorithm we assign each detection with the tracked objects. Sample output from this Multi Object tracker is below where Black colored objects are the actual detections and colored are predictions -
+*This project implements kalman filter tracking on detected objects using Yolov8. This repo is explicitly created to do such tasks using roboflow object detection models. Currently only available for single object tracking. This demo is implemented using soccer-ball detection model from roboflow.
 
-<p align="center">
- https://github.com/irfanbykara/Multi-Object-Tracking-with-Kalman-Filter/assets/63783207/37a0e4a7-f7aa-4ff9-840a-00cb6a487ee1
-  <p align="center">Sample Multi Obejct Tracking output</p>
-</p>
+## To run
+
+```
+
+pip install -r requirements.txt
+python object_track.py  --roboflow_api $your_roboflow_api --project_code $your_project_code --path $video_path --overlap $30 --confidence $40 --max_tracks $1
+
+```
+
+
+
+
+https://github.com/irfanbykara/Multi-Object-Tracking-with-Kalman-Filter/assets/63783207/a5dfeb17-f2ad-4fe1-a955-f97a16e9abee
 
 
 
 
 # References -
+Forked From: https://github.com/mabhisharma/Multi-Object-Tracking-with-Kalman-Filter
 http://studentdavestutorials.weebly.com/multi-bugobject-tracking.html
