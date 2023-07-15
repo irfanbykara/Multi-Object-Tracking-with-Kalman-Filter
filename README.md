@@ -11,9 +11,7 @@ python object_track.py  --roboflow_api $your_roboflow_api --project_code $your_p
 
 
 
-<center>
 https://github.com/irfanbykara/Multi-Object-Tracking-with-Kalman-Filter/assets/63783207/a5dfeb17-f2ad-4fe1-a955-f97a16e9abee
-</center>
 
 
 
