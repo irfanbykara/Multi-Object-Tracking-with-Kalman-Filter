@@ -5,17 +5,15 @@
 ## To run
 
 ```
-
 pip install -r requirements.txt
 python object_track.py  --roboflow_api $your_roboflow_api --project_code $your_project_code --path $video_path --overlap $30 --confidence $40 --max_tracks $1
-
 ```
 
 
 
-
+<center>
 https://github.com/irfanbykara/Multi-Object-Tracking-with-Kalman-Filter/assets/63783207/a5dfeb17-f2ad-4fe1-a955-f97a16e9abee
-
+</center>
 
 
 
