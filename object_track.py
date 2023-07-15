@@ -8,7 +8,7 @@ import argparse
 
 
 
-def main(roboflow_api, project_code, path, max_tracks):
+def main(roboflow_api, project_code, path, max_tracks,confidence,overlap):
 
 	tracker = Tracker(150, 30, 5)
 	track_colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0),
@@ -23,21 +23,20 @@ def main(roboflow_api, project_code, path, max_tracks):
 		success, img = cap.read()
 
 		# infer on a local image
-		results = model.predict(img).json()
+		results = model.predict(img,confidence=confidence,overlap=overlap).json()
 		all_centers = []
 		all_width = []
 		all_height = []
 		if len(results['predictions']) != 0:
 
 
-			for prediction in range(len(results['predictions'])):
-				x = int(results['predictions'][prediction]['x'])
-				y = int(results['predictions'][prediction]['y'])
-				width = int(results['predictions'][prediction]['width'])
-				height = int(results['predictions'][prediction]['height'])
-				all_centers.append(np.array([x,y]))
-				all_height.append(height)
-				all_width.append(width)
+			x = int(results['predictions'][0]['x'])
+			y = int(results['predictions'][0]['y'])
+			width = int(results['predictions'][0]['width'])
+			height = int(results['predictions'][0]['height'])
+			all_centers.append(np.array([x,y]))
+			all_height.append(height)
+			all_width.append(width)
 
 
 		centers = np.array(all_centers,dtype=np.int32)
@@ -46,39 +45,38 @@ def main(roboflow_api, project_code, path, max_tracks):
 		#nd1YcGT3Ih4NAY7Qh4nB
 		if (len(all_centers) > 0):
 			tracker.update(centers)
-			for j in range(min(len(tracker.tracks),max_tracks)):
 
-				if (len(tracker.tracks[j].trace) > 1):
+			cv2.circle(img, (int(centers[0, 0]), int(centers[0, 1])), 6, (0, 0, 0), -1)
+			tl = (int(int(centers[0, 0]) - int(all_width[0] / 2)), int(int(centers[0, 1]) - int(all_height[0] / 2)))
+			br = (int(int(centers[0, 0]) + (all_width[0] / 2)), int(int(centers[0, 1]) + (all_height[0] / 2)))
 
-					x = int(tracker.tracks[j].trace[-1][0,0])
-					y = int(tracker.tracks[j].trace[-1][0,1])
+			cv2.rectangle(img, tl, br, track_colors[3], 1)
 
-					if all_height!=len(tracker.tracks):
-						pass
-					else:
-						width = all_width[j]
-						height = all_height[j]
+		for j in range(1):
 
-					tl = (int(x-int(width/2)),int(y-int(height/2)))
-					br = (int(x+(width/2)),int(y+(height/2)))
+			if (len(tracker.tracks[j].trace) > 1):
 
-					cv2.rectangle(img,tl,br,track_colors[3],1)
-					cv2.putText(img,str(tracker.tracks[j].trackId), (x-10,y-20),0, 0.5, track_colors[2],2)
+				x = int(tracker.tracks[j].trace[-1][0,0])
+				y = int(tracker.tracks[j].trace[-1][0,1])
 
-					for k in range(len(tracker.tracks[j].trace)):
-						x = int(tracker.tracks[j].trace[k][0,0])
-						y = int(tracker.tracks[j].trace[k][0,1])
 
-						cv2.circle(img,(x,y), 3, track_colors[1],-1)
-					cv2.circle(img,(x,y), 6, track_colors[0],-1)
 
-				cv2.circle(img,(int(centers[0,0]),int(centers[0,1])), 6, (0,0,0),-1)
-			cv2.imshow('image',img)
+				cv2.putText(img,str(tracker.tracks[j].trackId), (x-10,y-20),0, 0.5, track_colors[2],2)
 
-			time.sleep(0.1)
+				for k in range(len(tracker.tracks[j].trace)):
+					x = int(tracker.tracks[j].trace[k][0,0])
+					y = int(tracker.tracks[j].trace[k][0,1])
 
-			if cv2.waitKey(1) & 0xFF == ord('q'):
-				cv2.destroyAllWindows()
+					cv2.circle(img,(x,y), 3, track_colors[1],-1)
+				cv2.circle(img,(x,y), 6, track_colors[0],-1)
+
+			# cv2.circle(img,(int(centers[0,0]),int(centers[0,1])), 6, (0,0,0),-1)
+		cv2.imshow('image',img)
+
+		time.sleep(0.1)
+
+		if cv2.waitKey(1) & 0xFF == ord('q'):
+			cv2.destroyAllWindows()
 
 
 
@@ -90,7 +88,10 @@ if __name__ == '__main__':
 	parser.add_argument('--project_code',type=str, default="soccerballdetector")
 
 	parser.add_argument("--path", type=str, default='resources/football.mp4')
-	parser.add_argument("--max_tracks", type=int, default=3)
+	parser.add_argument("--confidence", type=int, default=40)
+	parser.add_argument("--overlap", type=int, default=30)
+
+	parser.add_argument("--max_tracks", type=int, default=1)
 
 	args = parser.parse_args()
 
@@ -98,6 +99,10 @@ if __name__ == '__main__':
 	project_code = args.project_code
 	path = args.path
 	max_tracks = args.max_tracks
+	confidence = args.confidence
+	overlap = args.overlap
 
-	main(roboflow_api, project_code, path, max_tracks)
+
+
+	main(roboflow_api, project_code, path, max_tracks,confidence,overlap)
 
